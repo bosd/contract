@@ -556,6 +556,16 @@ class TestContract(TestContractBase):
         )
         self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
 
+    def test_archived_product_not_selectable(self):
+        """Archived products must be excluded from the contract line's
+        product picker domain."""
+        archived = self.product_1.copy({"name": "Archived test product"})
+        archived.active = False
+        domain = self.env["contract.line"]._fields["product_id"].domain
+        found = self.env["product.product"].search(domain)
+        self.assertIn(self.product_1, found)
+        self.assertNotIn(archived, found)
+
     def test_onchange_partner_id(self):
         self.contract._onchange_partner_id()
         self.assertEqual(
