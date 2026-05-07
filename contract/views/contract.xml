@@ -520,14 +520,14 @@
                 />
                 <group>
                     <filter
-                        string="Associated Partner"
+                        string="Contact"
                         name="group_by_partner"
                         domain="[]"
                         context="{'group_by':'partner_id'}"
                     />
                     <filter
                         name="commercial_partner_groupby"
-                        string="Commercial Entity"
+                        string="Company"
                         context="{'group_by': 'commercial_partner_id'}"
                     />
                     <filter
