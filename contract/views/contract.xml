@@ -405,6 +405,49 @@
             </field>
         </field>
     </record>
+    <!--KANBAN view-->
+    <record id="contract_contract_kanban_view" model="ir.ui.view">
+        <field name="name">contract.contract kanban view (in contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" highlight_color="color">
+                <templates>
+                    <t t-name="menu">
+                        <field name="color" widget="kanban_color_picker" />
+                        <a role="menuitem" type="open">Open</a>
+                        <a role="menuitem" type="object" name="copy">Duplicate</a>
+                        <a role="menuitem" type="archive">Archive</a>
+                        <a role="menuitem" type="unarchive">Restore</a>
+                        <a role="menuitem" type="delete">Delete</a>
+                    </t>
+                    <t t-name="card">
+                        <div class="d-flex align-items-baseline">
+                            <field name="partner_id" class="fw-bold fs-5" />
+                            <field
+                                name="tag_ids"
+                                widget="many2many_tags"
+                                options="{'color_field': 'color'}"
+                                class="ms-auto"
+                            />
+                        </div>
+                        <field name="name" />
+                        <div class="d-flex justify-content-between text-muted mt-2">
+                            <field name="code" />
+                            <field name="recurring_next_date" widget="remaining_days" />
+                        </div>
+                        <footer>
+                            <field name="activity_ids" widget="kanban_activity" />
+                            <field
+                                name="user_id"
+                                widget="many2one_avatar_user"
+                                class="ms-auto"
+                            />
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
     <!--TREE view-->
     <record id="contract_contract_tree_view" model="ir.ui.view">
         <field name="name">contract.contract list view (in contract)</field>
@@ -523,7 +566,7 @@
     <record id="action_customer_contract" model="ir.actions.act_window">
         <field name="name">Customer Contracts</field>
         <field name="res_model">contract.contract</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,kanban,activity,form</field>
         <field name="path">customer-contracts</field>
         <field name="domain">[('contract_type', '=', 'sale')]</field>
         <field name="context">
@@ -560,7 +603,7 @@
     <record id="action_supplier_contract" model="ir.actions.act_window">
         <field name="name">Supplier Contracts</field>
         <field name="res_model">contract.contract</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,kanban,activity,form</field>
         <field name="path">supplier-contracts</field>
         <field name="domain">[('contract_type', '=', 'purchase')]</field>
         <field name="context">

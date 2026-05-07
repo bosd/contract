@@ -47,6 +47,7 @@ class ContractContract(models.Model):
         ondelete="restrict",
     )
     tag_ids = fields.Many2many(comodel_name="contract.tag", string="Tags")
+    color = fields.Integer(string="Color Index")
     note = fields.Text(string="Notes")
 
     # === Partner and Commercial Info ===
