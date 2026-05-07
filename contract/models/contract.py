@@ -48,7 +48,7 @@ class ContractContract(models.Model):
     )
     tag_ids = fields.Many2many(comodel_name="contract.tag", string="Tags")
     color = fields.Integer(string="Color Index")
-    note = fields.Text(string="Notes")
+    note = fields.Html(string="Notes", sanitize=True)
 
     # === Partner and Commercial Info ===
     partner_id = fields.Many2one(

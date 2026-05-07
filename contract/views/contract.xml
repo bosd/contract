@@ -28,7 +28,7 @@
                         <button
                             name="action_show_invoices"
                             type="object"
-                            icon="fa-list"
+                            icon="fa-pencil-square-o"
                             class="oe_stat_button"
                             invisible="generation_type != 'invoice'"
                         >
@@ -47,18 +47,23 @@
                     />
                     <div class="oe_title">
                         <label for="name" string="Contract Name" class="oe_edit_only" />
-                        <h3>
+                        <h1>
                             <field
                                 name="name"
                                 class="oe_inline"
                                 placeholder="e.g. Contract XYZ"
                             />
-                        </h3>
+                        </h1>
                     </div>
                     <group name="main">
                         <group>
-                            <field name="partner_id" required="1" />
-                            <field name="user_id" widget="many2one_avatar_user" />
+                            <field
+                                name="partner_id"
+                                required="1"
+                                widget="res_partner_many2one"
+                                context="{'show_address': 1}"
+                                options='{"always_reload": True}'
+                            />
                         </group>
                         <group>
                             <field
@@ -67,12 +72,6 @@
                                 context="{'default_contract_type': contract_type}"
                             />
                             <field name="pricelist_id" />
-
-                            <field
-                                name="company_id"
-                                options="{'no_create': True}"
-                                groups="base.group_multi_company"
-                            />
                             <field name="contract_type" invisible="1" required="1" />
                             <field
                                 name="tag_ids"
@@ -319,6 +318,19 @@
                         </page>
                         <page name="info" string="Other Information">
                             <group>
+                                <group string="Sales" name="group_sales">
+                                    <field
+                                        name="user_id"
+                                        widget="many2one_avatar_user"
+                                    />
+                                    <field
+                                        name="company_id"
+                                        options="{'no_create': True}"
+                                        groups="base.group_multi_company"
+                                    />
+                                </group>
+                            </group>
+                            <group>
                                 <field name="code" />
                                 <field name="group_id" />
                                 <field
@@ -374,7 +386,8 @@
                 <attribute
                     name="context"
                 >{'default_customer_rank': 1, 'default_supplier_rank': 0,
-                    'res_partner_search_mode': 'customer', 'show_vat': True}
+                    'res_partner_search_mode': 'customer', 'show_vat': True,
+                    'show_address': 1}
                 </attribute>
             </field>
             <field name="journal_id" position="attributes">
@@ -396,7 +409,8 @@
                 <attribute
                     name="context"
                 >{'default_customer_rank': False, 'default_supplier_rank': 1,
-                    'res_partner_search_mode': 'supplier', 'show_vat': True}
+                    'res_partner_search_mode': 'supplier', 'show_vat': True,
+                    'show_address': 1}
                 </attribute>
             </field>
             <field name="journal_id" position="attributes">
@@ -466,6 +480,7 @@
                 />
                 <field name="partner_id" />
                 <field name="user_id" widget="many2one_avatar_user" optional="show" />
+                <field name="contract_template_id" optional="hide" />
                 <field
                     name="tag_ids"
                     widget="many2many_tags"
@@ -503,9 +518,14 @@
                 />
                 <separator />
                 <filter
+                    name="upcoming"
+                    string="Upcoming"
+                    domain="[('date_start', '&gt;', context_today().strftime('%Y-%m-%d'))]"
+                />
+                <filter
                     name="not_finished"
                     string="In progress"
-                    domain="['|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), '&amp;', ('date_end', '=', False), ('recurring_next_date', '!=', False)]"
+                    domain="['&amp;', '|', ('date_start', '=', False), ('date_start', '&lt;=', context_today().strftime('%Y-%m-%d')), '|', ('date_end', '&gt;=', context_today().strftime('%Y-%m-%d')), '&amp;', ('date_end', '=', False), ('recurring_next_date', '!=', False)]"
                 />
                 <filter
                     name="finished"
