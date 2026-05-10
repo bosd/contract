@@ -1252,8 +1252,12 @@ class TestContract(TestContractBase):
         self.acct_line.recurring_invoicing_type = "post-paid"
         self.acct_line.date_end = "2018-03-15"
         bad = self.contract2
-        # Simulate a previous failure so the contract is flagged.
-        bad._record_invoice_generation_error(RuntimeError("earlier failure"), "invoice")
+        # Simulate a previous failure so the contract is flagged. Mute the
+        # expected ERROR log -- ``checklog-odoo`` would otherwise fail CI.
+        with mute_logger("odoo.addons.contract.models.contract"):
+            bad._record_invoice_generation_error(
+                RuntimeError("earlier failure"), "invoice"
+            )
         self.assertTrue(bad.has_invoice_generation_error)
         open_activities = bad.activity_ids.filtered(
             lambda a: a.summary == "Recurring invoice failed"
@@ -1340,7 +1344,8 @@ class TestContract(TestContractBase):
     def test_action_clear_invoice_generation_error(self):
         """The dismiss button clears the flag without running the cron."""
         bad = self.contract
-        bad._record_invoice_generation_error(RuntimeError("oops"), "invoice")
+        with mute_logger("odoo.addons.contract.models.contract"):
+            bad._record_invoice_generation_error(RuntimeError("oops"), "invoice")
         self.assertTrue(bad.has_invoice_generation_error)
         bad.action_clear_invoice_generation_error()
         self.assertFalse(bad.has_invoice_generation_error)
