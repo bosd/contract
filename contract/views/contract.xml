@@ -42,9 +42,13 @@
                                 readonly="1"
                                 class="d-inline"
                             />
-                            <pre
-                                class="mb-0 mt-1"
-                            ><field name="invoice_generation_error" readonly="1" nolabel="1" /></pre>
+                            <pre class="mb-0 mt-1">
+                                <field
+                                    name="invoice_generation_error"
+                                    readonly="1"
+                                    nolabel="1"
+                                />
+                            </pre>
                         </div>
                         <button
                             name="action_clear_invoice_generation_error"

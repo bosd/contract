@@ -1197,12 +1197,10 @@ class TestContract(TestContractBase):
         good_a = self.contract2
         good_b = self.contract.copy()
         bad = self.contract.copy()
-        contracts = good_a | good_b | bad
         boom = RuntimeError("boom: bad data")
-        original = (
-            self.env["contract.contract"]
-            .__class__._prepare_recurring_invoices_values
-        )
+        original = self.env[
+            "contract.contract"
+        ].__class__._prepare_recurring_invoices_values
 
         def patched(self, date_ref=False):
             if bad.id in self.ids:
@@ -1215,9 +1213,7 @@ class TestContract(TestContractBase):
             "_prepare_recurring_invoices_values",
             patched,
         ):
-            with mute_logger(
-                "odoo.addons.contract.models.contract", "odoo.sql_db"
-            ):
+            with mute_logger("odoo.addons.contract.models.contract", "odoo.sql_db"):
                 Contract.cron_recurring_create_invoice()
 
         # The two healthy contracts still got their invoice lines.
@@ -1257,9 +1253,7 @@ class TestContract(TestContractBase):
         self.acct_line.date_end = "2018-03-15"
         bad = self.contract2
         # Simulate a previous failure so the contract is flagged.
-        bad._record_invoice_generation_error(
-            RuntimeError("earlier failure"), "invoice"
-        )
+        bad._record_invoice_generation_error(RuntimeError("earlier failure"), "invoice")
         self.assertTrue(bad.has_invoice_generation_error)
         open_activities = bad.activity_ids.filtered(
             lambda a: a.summary == "Recurring invoice failed"
@@ -1270,9 +1264,7 @@ class TestContract(TestContractBase):
         self.assertFalse(bad.has_invoice_generation_error)
         self.assertFalse(bad.invoice_generation_error)
         self.assertFalse(
-            bad.activity_ids.filtered(
-                lambda a: a.summary == "Recurring invoice failed"
-            )
+            bad.activity_ids.filtered(lambda a: a.summary == "Recurring invoice failed")
         )
 
     def test_cron_does_not_duplicate_activity_or_chatter(self):
@@ -1282,10 +1274,9 @@ class TestContract(TestContractBase):
         self.acct_line.date_end = "2018-03-15"
         bad = self.contract.copy()
         boom = RuntimeError("boom: persistent bad data")
-        original = (
-            self.env["contract.contract"]
-            .__class__._prepare_recurring_invoices_values
-        )
+        original = self.env[
+            "contract.contract"
+        ].__class__._prepare_recurring_invoices_values
 
         def patched(self, date_ref=False):
             if bad.id in self.ids:
@@ -1298,25 +1289,18 @@ class TestContract(TestContractBase):
             "_prepare_recurring_invoices_values",
             patched,
         ):
-            with mute_logger(
-                "odoo.addons.contract.models.contract", "odoo.sql_db"
-            ):
+            with mute_logger("odoo.addons.contract.models.contract", "odoo.sql_db"):
                 Contract.cron_recurring_create_invoice()
                 Contract.cron_recurring_create_invoice()
 
         open_activities = bad.activity_ids.filtered(
             lambda a: a.summary == "Recurring invoice failed"
         )
-        self.assertEqual(
-            len(open_activities), 1, "Activity must not duplicate"
-        )
+        self.assertEqual(len(open_activities), 1, "Activity must not duplicate")
         relevant_chatter = bad.message_ids.filtered(
-            lambda m: m.body
-            and "Recurring invoice generation failed" in m.body
+            lambda m: m.body and "Recurring invoice generation failed" in m.body
         )
-        self.assertEqual(
-            len(relevant_chatter), 1, "Chatter must not duplicate"
-        )
+        self.assertEqual(len(relevant_chatter), 1, "Chatter must not duplicate")
 
     def test_cron_uses_batch_fast_path_when_all_succeed(self):
         """Healthy contracts should hit the single-batched create path:
@@ -1329,10 +1313,7 @@ class TestContract(TestContractBase):
         contracts = self.contract2
         for _i in range(3):
             contracts |= self.contract.copy()
-        original = (
-            self.env["contract.contract"]
-            .__class__._recurring_create_invoice
-        )
+        original = self.env["contract.contract"].__class__._recurring_create_invoice
         call_recordset_sizes = []
 
         def spy(self, date_ref=False):
@@ -1340,9 +1321,7 @@ class TestContract(TestContractBase):
             return original(self, date_ref)
 
         Contract = self.env["contract.contract"]
-        with mock.patch.object(
-            Contract.__class__, "_recurring_create_invoice", spy
-        ):
+        with mock.patch.object(Contract.__class__, "_recurring_create_invoice", spy):
             Contract.cron_recurring_create_invoice()
 
         # The batch path should be entered once per company (one company in

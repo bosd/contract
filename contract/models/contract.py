@@ -813,19 +813,24 @@ class ContractContract(models.Model):
                 "invoice_generation_error_date": fields.Datetime.now(),
             }
         )
-        _logger.exception(
-            "Failed to create recurring %s for contract %s (id=%s)",
+        # Use ``exc_info=exc`` rather than ``_logger.exception`` so the
+        # traceback is logged when available (real cron failure) and a
+        # clean line is logged when not (e.g. when this helper is invoked
+        # directly to seed a flag in tests).
+        _logger.error(
+            "Failed to create recurring %s for contract %s (id=%s): %s",
             create_type,
             self.name,
             self.id,
+            message,
+            exc_info=exc,
         )
         # Avoid posting the same error message repeatedly.
         last_body = self.message_ids[:1].body or ""
         if message not in last_body:
             self.message_post(
                 body=Markup(
-                    "<b>⚠ Recurring invoice generation failed</b><br/>"
-                    "<pre>%s</pre>"
+                    "<b>⚠ Recurring invoice generation failed</b><br/><pre>%s</pre>"
                 )
                 % message,
             )
