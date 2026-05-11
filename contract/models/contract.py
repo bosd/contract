@@ -126,6 +126,7 @@ class ContractContract(models.Model):
     # === Dates ===
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
     last_date_invoiced = fields.Date(
+        string="Date of Last Invoice",
         compute="_compute_last_date_invoiced",
         store=True,
         readonly=True,
