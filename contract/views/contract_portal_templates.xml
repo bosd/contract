@@ -325,7 +325,6 @@
             <section
                 t-if="contract.modification_ids"
                 class="s_timeline pt24 pb48 o_colored_level"
-                data-snippet="s_timeline"
             >
                 <div class="container s_timeline_line">
                     <t t-set="last_modification_date" t-value="False" />
@@ -352,10 +351,7 @@
                             </t>
                         </div>
                         <div class="s_timeline_content s_timeline_content_left d-flex">
-                            <div
-                                class="s_timeline_card s_card card bg-white w-100"
-                                data-snippet="s_card"
-                            >
+                            <div class="s_timeline_card s_card card bg-white w-100">
                                 <div class="card-body">
                                     <div
                                         class="card-text o_default_snippet_text"
