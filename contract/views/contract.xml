@@ -363,14 +363,17 @@
                                         groups="base.group_multi_company"
                                     />
                                 </group>
-                            </group>
-                            <group>
-                                <field name="code" />
-                                <field name="group_id" />
-                                <field
-                                    name="currency_id"
-                                    groups="base.group_multi_currency"
-                                />
+                                <group
+                                    string="Administration"
+                                    name="group_administration"
+                                >
+                                    <field name="code" />
+                                    <field name="group_id" />
+                                    <field
+                                        name="currency_id"
+                                        groups="base.group_multi_currency"
+                                    />
+                                </group>
                             </group>
 
                             <group
