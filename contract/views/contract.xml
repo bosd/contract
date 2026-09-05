@@ -611,7 +611,7 @@
                     />
                     <filter
                         name="commercial_partner_groupby"
-                        string="Company"
+                        string="Commercial Entity"
                         context="{'group_by': 'commercial_partner_id'}"
                     />
                     <filter
