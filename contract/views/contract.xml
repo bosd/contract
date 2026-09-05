@@ -142,9 +142,7 @@
                                 context="{'default_contract_type': contract_type, 'default_recurring_rule_type': recurring_rule_type, 'default_recurring_invoicing_type': recurring_invoicing_type, 'default_recurring_interval': recurring_interval, 'default_date_start': date_start, 'default_recurring_next_date': recurring_next_date}"
                             >
                                 <list
-                                    decoration-muted="state in ('closed', 'canceled')"
-                                    decoration-info="state == 'upcoming'"
-                                    decoration-primary="state in ('to-renew', 'upcoming-close')"
+                                    decoration-info="create_invoice_visibility"
                                     editable="bottom"
                                 >
                                     <control>
@@ -233,11 +231,7 @@
                                 widget="product_label_section_and_note_field_o2m"
                                 context="{'default_contract_type': contract_type}"
                             >
-                                <list
-                                    decoration-muted="state in ('closed', 'canceled')"
-                                    decoration-info="state == 'upcoming'"
-                                    decoration-primary="state in ('to-renew', 'upcoming-close')"
-                                >
+                                <list decoration-info="create_invoice_visibility">
                                     <control>
                                         <create string="Add a line" />
                                         <create
