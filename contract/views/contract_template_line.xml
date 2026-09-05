@@ -38,7 +38,10 @@
                                     required="not display_type"
                                 />
                             </div>
-                            <field name="discount" />
+                            <field
+                                name="discount"
+                                groups="contract.group_discount_per_contract_line"
+                            />
                         </group>
                     </group>
                     <label for="name" string="Description" invisible="display_type" />
