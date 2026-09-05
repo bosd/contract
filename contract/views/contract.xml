@@ -533,6 +533,7 @@
                     optional="hide"
                 />
                 <field name="partner_id" />
+                <field name="payment_term_id" optional="hide" />
                 <field name="user_id" widget="many2one_avatar_user" optional="show" />
                 <field name="contract_template_id" optional="hide" />
                 <field
