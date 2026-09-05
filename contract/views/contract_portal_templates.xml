@@ -93,9 +93,16 @@
                     />
                 </t>
             </t>
-            <!-- Use the generic portal sidebar class. The sale-specific
-                 "o_portal_sale_sidebar" binds sale/sale_management frontend
-                 interactions that expect a sales order and crash here. -->
+            <!--
+                NB: do NOT use the class "o_portal_sale_sidebar" here. That
+                class is the binding selector for the sale / sale_management
+                frontend interactions (SaleSidebar, SaleUpdateLineButton,
+                PortalPrepayment). SaleUpdateLineButton.setup() does
+                `this.el.querySelector("table#sales_order_table").dataset`,
+                which throws a TypeError on the contract page because there is
+                no sale-order table here. The contract portal page needs no JS
+                interaction, so use the neutral "o_portal_sidebar" class.
+            -->
             <div class="row o_portal_sidebar">
                 <div class="d-flex col-lg-4 col-xxl-3 d-print-none">
                     <div
