@@ -1,6 +1,8 @@
 # Copyright 2020 Tecnativa - Víctor Martínez
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl)
 
+import json
+
 from odoo import http
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
@@ -59,3 +61,43 @@ class TestContractPortal(HttpCase, BaseCommon):
             safe_eval(report.print_report_name, {"object": contract, "time": time}),
             filename,
         )
+
+    def test_portal_contract_type_split(self):
+        partner = self.env["res.partner"].create({"name": "partner both sides"})
+        customer, supplier = self.env["contract.contract"].create(
+            [
+                {
+                    "name": "Customer Contract",
+                    "partner_id": partner.id,
+                    "contract_type": "sale",
+                },
+                {
+                    "name": "Supplier Contract",
+                    "partner_id": partner.id,
+                    "contract_type": "purchase",
+                },
+            ]
+        )
+        (customer | supplier).message_subscribe(partner_ids=partner.ids)
+        self._create_new_portal_user(
+            partner_id=partner.id, login="portal_split", password="portal_split"
+        )
+        self.authenticate("portal_split", "portal_split")
+        http.root.session_store.save(self.session)
+
+        counters = self.url_open(
+            url="/my/counters",
+            data=json.dumps(
+                {"params": {"counters": ["contract_count", "supplier_contract_count"]}}
+            ),
+            headers={"Content-Type": "application/json"},
+        ).json()["result"]
+        self.assertEqual(counters["contract_count"], 1)
+        self.assertEqual(counters["supplier_contract_count"], 1)
+
+        customer_page = self.url_open(url="/my/contracts?filterby=customer").text
+        self.assertIn(customer.name, customer_page)
+        self.assertNotIn(supplier.name, customer_page)
+        supplier_page = self.url_open(url="/my/contracts?filterby=supplier").text
+        self.assertIn(supplier.name, supplier_page)
+        self.assertNotIn(customer.name, supplier_page)
