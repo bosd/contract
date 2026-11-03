@@ -476,7 +476,7 @@
                     invisible="not invoice_generation_error"
                 />
                 <field name="invoice_generation_error" column_invisible="True" />
-                <field name="name" string="Name" />
+                <field name="name" string="Name" decoration-bf="1" />
                 <field name="code" optional="show" />
                 <field name="journal_id" groups="account.group_account_user" />
                 <field name="partner_id" />
