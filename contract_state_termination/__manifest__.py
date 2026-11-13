@@ -4,7 +4,7 @@
 {
     "name": "Contract State Termination",
     "summary": "Show terminated contracts as a Terminated state",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.2",
     "category": "Contract Management",
     "license": "AGPL-3",
     "author": "bosd, Odoo Community Association (OCA)",
