@@ -32,7 +32,7 @@ msgid ""
 "                    &amp;nbsp;&amp;nbsp;Contract: <strong t-"
 "out=\"object.name\"/><br/>\n"
 "                    <t t-if=\"object.date_start\">\n"
-"                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t t-"
+"                        &amp;nbsp;&amp;nbsp;Contract Start Date: <t t-"
 "out=\"object.date_start or ''\"/><br/>\n"
 "                    </t>\n"
 "\n"
@@ -201,11 +201,6 @@ msgid "<strong>Customer:</strong>"
 msgstr ""
 
 #. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
-msgid "<strong>Date Start</strong>"
-msgstr ""
-
-#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date end</strong>"
 msgstr ""
@@ -275,6 +270,11 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Responsible:</strong>"
+msgstr ""
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Start Date</strong>"
 msgstr ""
 
 #. module: contract
@@ -675,6 +675,12 @@ msgid "Currency"
 msgstr ""
 
 #. module: contract
+#. odoo-python
+#: code:addons/contract/models/contract_template.py:0
+msgid "Currency should be same for the Journal and the Pricelist in a Contract"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__note_invoicing_mode__custom
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__note_invoicing_mode__custom
 msgid "Custom"
@@ -718,25 +724,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 #: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
 msgid "Date"
-msgstr ""
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_line__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_template__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_end
-#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
-msgid "Date End"
-msgstr ""
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_line__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_template__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
-msgid "Date Start"
 msgstr ""
 
 #. module: contract
@@ -854,6 +841,16 @@ msgstr ""
 #. module: contract
 #: model:mail.template,name:contract.email_contract_template
 msgid "Email Contract Template"
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_template__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_end
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "End Date"
 msgstr ""
 
 #. module: contract
@@ -1409,6 +1406,12 @@ msgid "Pricelist"
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__pricelist_id_domain
+#: model:ir.model.fields,field_description:contract.field_contract_template__pricelist_id_domain
+msgid "Pricelist Id Domain"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__product_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__product_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
@@ -1578,6 +1581,15 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_template__recurring_rule_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__recurring_rule_type
 msgid "Specify interval for automatic invoice generation."
+msgstr ""
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
+msgid "Start Date"
 msgstr ""
 
 #. module: contract
@@ -1752,6 +1764,14 @@ msgstr ""
 msgid ""
 "You can't have the start date after the date of last invoice for the "
 "contract line '%s'"
+msgstr ""
+
+#. module: contract
+#. odoo-python
+#: code:addons/contract/models/contract.py:0
+msgid ""
+"You cannot disable the 'Recurrence at line level' option if there are "
+"already invoices generated for this contract."
 msgstr ""
 
 #. module: contract

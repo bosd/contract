@@ -45,15 +45,23 @@ class ContractContract(models.Model):
         default=lambda self: self.env.user,
     )
     group_id = fields.Many2one(
-        string="Group",
+        string="Analytic Account",
         comodel_name="account.analytic.account",
         compute="_compute_group_id",
         store=True,
         readonly=False,
         ondelete="restrict",
+        help=(
+            "Analytic account shared by every line of this contract. "
+            "Computed from the lines' analytic distribution when all lines "
+            "point at the same account; left empty when the lines use "
+            "different accounts. Stored compute, editable: clearing or "
+            "setting it manually overrides the computed value."
+        ),
     )
     tag_ids = fields.Many2many(comodel_name="contract.tag", string="Tags")
-    note = fields.Text(string="Notes")
+    color = fields.Integer(string="Color Index")
+    note = fields.Html(string="Notes", sanitize=True)
 
     # === Partner and Commercial Info ===
     partner_id = fields.Many2one(
@@ -81,7 +89,6 @@ class ContractContract(models.Model):
         compute="_compute_currency_id",
         inverse="_inverse_currency_id",
         comodel_name="res.currency",
-        string="Currency",
     )
     manual_currency_id = fields.Many2one(
         comodel_name="res.currency",
@@ -94,7 +101,6 @@ class ContractContract(models.Model):
     )
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
-        string="Fiscal Position",
         ondelete="restrict",
     )
     invoice_count = fields.Integer(compute="_compute_invoice_count")
@@ -104,7 +110,6 @@ class ContractContract(models.Model):
 
     # === Contract Template and Lines ===
     contract_template_id = fields.Many2one(
-        string="Contract Template",
         comodel_name="contract.template",
     )
     contract_line_ids = fields.One2many(
@@ -130,6 +135,13 @@ class ContractContract(models.Model):
 
     # === Dates ===
     date_end = fields.Date(compute="_compute_date_end", store=True, readonly=False)
+    last_date_invoiced = fields.Date(
+        string="Date of Last Invoice",
+        compute="_compute_last_date_invoiced",
+        store=True,
+        readonly=True,
+        copy=False,
+    )
 
     # === Cron status ===
     invoice_generation_error = fields.Text(
@@ -226,6 +238,39 @@ class ContractContract(models.Model):
             if date_end and all(date_end):
                 contract.date_end = max(date_end)
 
+    @api.constrains("date_start", "date_end")
+    def _check_contract_start_end_dates(self):
+        # When lines are present, the line-level _check_start_end_dates
+        # constraint covers per-line validation, and contract.date_end is
+        # computed from the lines while contract.date_start may legitimately
+        # default to today even for an existing-line contract — so the
+        # contract-level pair is not strictly comparable. An empty date_end
+        # (open-ended contract) is also allowed.
+        for rec in self:
+            if rec.contract_line_ids:
+                continue
+            if rec.date_start and rec.date_end and rec.date_start > rec.date_end:
+                raise ValidationError(
+                    self.env._("Contract end date must be after the start date.")
+                )
+
+    @api.depends(
+        "contract_line_ids.last_date_invoiced",
+        "contract_line_ids.is_canceled",
+        "contract_line_ids.display_type",
+        "contract_line_ids.is_recurring_note",
+    )
+    def _compute_last_date_invoiced(self):
+        for contract in self:
+            dates = contract.contract_line_ids.filtered(
+                lambda line: (
+                    line.last_date_invoiced
+                    and not line.is_canceled
+                    and (not line.display_type or line.is_recurring_note)
+                )
+            ).mapped("last_date_invoiced")
+            contract.last_date_invoiced = max(dates) if dates else False
+
     def _inverse_partner_id(self):
         for rec in self:
             if not rec.invoice_partner_id:
@@ -317,6 +362,17 @@ class ContractContract(models.Model):
         records = super().create(vals_list)
         records._set_start_contract_modification()
         return records
+
+    @api.constrains("line_recurrence")
+    def _check_line_recurrence(self):
+        for record in self:
+            if not record.line_recurrence and record.invoice_count > 0:
+                raise ValidationError(
+                    self.env._(
+                        "You cannot disable the 'Recurrence at line level' option "
+                        "if there are already invoices generated for this contract."
+                    )
+                )
 
     def write(self, vals):
         if "modification_ids" in vals:

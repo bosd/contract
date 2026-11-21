@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-30 11:59+0000\n"
-"PO-Revision-Date: 2026-01-03 21:42+0000\n"
-"Last-Translator: Quentin THEURET <quentin@quentin-theuret.net>\n"
+"PO-Revision-Date: 2026-10-16 14:46+0000\n"
+"Last-Translator: Pierre Halleux <p.halleux@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/oca/teams/23907/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.10.4\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: contract
 #: model:mail.template,body_html:contract.email_contract_template
@@ -33,7 +33,7 @@ msgid ""
 "                    &amp;nbsp;&amp;nbsp;Contract: <strong t-"
 "out=\"object.name\"/><br/>\n"
 "                    <t t-if=\"object.date_start\">\n"
-"                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t t-"
+"                        &amp;nbsp;&amp;nbsp;Contract Start Date: <t t-"
 "out=\"object.date_start or ''\"/><br/>\n"
 "                    </t>\n"
 "\n"
@@ -98,87 +98,6 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
-"<div style=\"font-family : 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-"serif ; font-size : 12px ; color : rgb(34, 34, 34) ; background-color : "
-"#FFF ; \">\n"
-"                <p>Hello <t t-out=\"object.partner_id.name or '' \"/>,</p>\n"
-"                <p>Un nouveau contrat a été créé : </p>\n"
-"\n"
-"                <p style=\"border-left : 1px solid #8e0000 ; margin-left : "
-"30px ;\">\n"
-"                    &amp ;nbsp ;&amp ;nbsp ;<strong>RÉFÉRENCES</strong><br/"
-">\n"
-"                    &amp ;nbsp ;&amp ;nbsp ;Contrat : <strong t-"
-"out=\"object.name\"/><br/>\n"
-"                    <t t-if=\"object.date_start\">\n"
-"                        &amp ;nbsp ;&amp ;nbsp ;Date de démarrage du "
-"contrat : <t t-out=\"object.date_start or ''\"/><br/>\n"
-"                    </t>\n"
-"\n"
-"                    <t t-if=\"object.user_id\">\n"
-"                    <t t-if=\"object.user_id.email\">\n"
-"                            &amp ;nbsp ;&amp ;nbsp ;Votre contact : <a t-att-"
-"href=\"'mailto :%s ?subject=Contrat %s' % (object.user_id.email, object.name)"
-"\" t-out=\"object.user_id.name\"/>\n"
-"                        </t>\n"
-"                    <t t-else=\"\">\n"
-"                            &amp ;nbsp ;&amp ;nbsp ;Votre contact : <t t-"
-"out=\"object.user_id.name\"/>\n"
-"                        </t>\n"
-"                </t>\n"
-"                </p>\n"
-"\n"
-"                <br/>\n"
-"                <p>Si vous avez des questions, n'hésitez pas à nous "
-"contacter.</p>\n"
-"                <p t-if=\"object.company_id.name\">Merci d'avoir choisi <t t-"
-"out=\"object.company_id.name\"/> !</p>\n"
-"                <p t-if=\"not object.company_id.name\">Merci de nous avoir "
-"choisi !</p>\n"
-"                <br/>\n"
-"                <br/>\n"
-"                <div style=\"width : 375px ; margin : 0px ; padding : 0px ; "
-"background-color : #8E0000 ; border-top-left-radius : 5px 5px ; border-top-"
-"right-radius : 5px 5px ; background-repeat : repeat no-repeat ;\">\n"
-"                    <h3 style=\"margin : 0px ; padding : 2px 14px ; font-"
-"size : 12px ; color : #DDD ;\">\n"
-"                        <strong style=\"text-transform :uppercase ;\" t-"
-"out=\"object.company_id.name\"/>\n"
-"                    </h3>\n"
-"                </div>\n"
-"                <div style=\"width : 347px ; margin : 0px ; padding : 5px "
-"14px ; line-height : 16px ; background-color : #F2F2F2 ;\">\n"
-"                    <span style=\"color : #222 ; margin-bottom : 5px ; "
-"display : block ; \">\n"
-"                        <address t-"
-"field=\"object.company_id.sudo().partner_id\" t-"
-"options=\"{&quot ;widget&quot ; : &quot ;contact&quot ;, "
-"&quot ;fields&quot ; : [&quot ;name&quot ;, &quot ;address&quot ;], "
-"&quot ;no_marker&quot ; : True}\"/>\n"
-"                    </span>\n"
-"                    <t t-if=\"object.company_id.phone\">\n"
-"                        <div style=\"margin-top : 0px ; margin-right : 0px ; "
-"margin-bottom : 0px ; margin-left : 0px ; padding-top : 0px ; padding-"
-"right : 0px ; padding-bottom : 0px ; padding-left : 0px ; \">\n"
-"                            Téléphone : <t t-out=\"object.company_id.phone\"/"
-">\n"
-"                        </div>\n"
-"                    </t>\n"
-"                    <t t-if=\"object.company_id.website\">\n"
-"                        <div>\n"
-"                            Site Web : <a t-att-"
-"href=\"object.company_id.website\" t-out=\"object.company_id.website\"/>\n"
-"                        </div>\n"
-"                    </t>\n"
-"                </div>\n"
-"                <br/>\n"
-"                <a t-att-href=\"'%s/my/contracts/%s ?access_token=%s' % "
-"(object.get_base_url(), object.id, object.access_token)\" target=\"_blank\" "
-"style=\"background-color :#875A7B ;padding : 8px 16px 8px 16px ; text-"
-"decoration : none ; color : #fff ; border-radius : 5px ; font-size :13px ;"
-"\">Voir le contrat</a>\n"
-"            </div>\n"
-"        "
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -186,11 +105,13 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle me-2\" aria-hidden=\"true\" "
 "title=\"Warning\"/>"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-2\" aria-hidden=\"true\" "
+"title=\"Avertissement\"/>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<i class=\"fa fa-print me-1\"/>View Details"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-1\"/>Voir les détails"
 
 #. module: contract
 #: model:mail.template,body_html:contract.mail_template_contract_modification
@@ -227,7 +148,7 @@ msgstr ""
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<span>Contract </span>"
-msgstr ""
+msgstr "<span>Contrat </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -312,11 +233,6 @@ msgid "<strong>Customer:</strong>"
 msgstr "<strong>Client :</strong>"
 
 #. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
-msgid "<strong>Date Start</strong>"
-msgstr "<strong>Date de début</strong>"
-
-#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date end</strong>"
 msgstr "<strong>Date de fin</strong>"
@@ -349,7 +265,7 @@ msgstr "<strong>Partenaire :</strong>"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Payment Terms</strong>"
-msgstr ""
+msgstr "<strong>Conditions de paiement</strong>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -372,6 +288,8 @@ msgid ""
 "<strong>Recurring invoice generation failed</strong>\n"
 "                            <span> on </span>"
 msgstr ""
+"<strong>Échec de la génération des factures récurrentes</strong>\n"
+"                            <span> le </span>"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
@@ -387,6 +305,11 @@ msgstr "<strong>Responsable : </strong>"
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Responsible:</strong>"
 msgstr "<strong>Responsable :</strong>"
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Start Date</strong>"
+msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
@@ -456,7 +379,7 @@ msgstr "Ajouter une section"
 #: model:ir.model.fields,field_description:contract.field_contract_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Unités de mesure autorisées"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__analytic_distribution
@@ -787,6 +710,13 @@ msgid "Currency"
 msgstr "Devise"
 
 #. module: contract
+#. odoo-python
+#: code:addons/contract/models/contract_template.py:0
+msgid "Currency should be same for the Journal and the Pricelist in a Contract"
+msgstr ""
+"Le journal et la liste de prix d'un contrat doivent avoir la même devise"
+
+#. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__note_invoicing_mode__custom
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__note_invoicing_mode__custom
 msgid "Custom"
@@ -831,25 +761,6 @@ msgstr "URL du portail client"
 #: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
 msgid "Date"
 msgstr "Date"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_line__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_template__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_end
-#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
-msgid "Date End"
-msgstr "Date de fin"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_line__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_template__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
-msgid "Date Start"
-msgstr "Date de début"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
@@ -937,7 +848,7 @@ msgstr "Remise à appliquer sur les factures générées. Doit être ≤ 100."
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 msgid "Dismiss"
-msgstr ""
+msgstr "Ignorer"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_account_move_line__display_name
@@ -970,9 +881,19 @@ msgid "Email Contract Template"
 msgstr "Modèle de mail de Contrat"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_template__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_end
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "End Date"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__invoice_generation_error
 msgid "Error message from the most recent failed scheduled invoicing run."
-msgstr ""
+msgstr "Message d'erreur de la dernière facturation planifiée en échec."
 
 #. module: contract
 #. odoo-python
@@ -1114,17 +1035,17 @@ msgstr "Facturer tous les"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_generation_error
 msgid "Invoice Generation Error"
-msgstr ""
+msgstr "Erreur de génération des factures"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__invoice_generation_error_date
 msgid "Invoice Generation Error Date"
-msgstr ""
+msgstr "Date de l'erreur de génération des factures"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
 msgid "Invoice Generation Failed"
-msgstr ""
+msgstr "Échec de la génération des factures"
 
 #. module: contract
 #: model:mail.message.subtype,name:contract.mail_message_subtype_invoice_created
@@ -1245,6 +1166,7 @@ msgstr "Dernière mise à jour le"
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_tree_view
 msgid "Last scheduled invoicing failed - click for details"
 msgstr ""
+"La dernière facturation planifiée a échoué - cliquez pour voir les détails"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
@@ -1324,7 +1246,7 @@ msgstr "Dernier jour du mois"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__monthly_recurring
 msgid "Monthly Recurring"
-msgstr ""
+msgstr "Montant mensuel récurrent"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__my_activity_date_deadline
@@ -1531,6 +1453,12 @@ msgid "Pricelist"
 msgstr "Liste de prix"
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__pricelist_id_domain
+#: model:ir.model.fields,field_description:contract.field_contract_template__pricelist_id_domain
+msgid "Pricelist Id Domain"
+msgstr "Domaine de la liste de prix"
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__product_id
 #: model:ir.model.fields,field_description:contract.field_contract_template_line__product_id
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
@@ -1705,6 +1633,15 @@ msgid "Specify interval for automatic invoice generation."
 msgstr "Détermine l'intervalle pour la génération automatique des factures."
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
+msgid "Start Date"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_state
 msgid ""
 "Status based on activities\n"
@@ -1765,12 +1702,13 @@ msgid ""
 "This is the date the contract is taken into account         (e.g.: signature "
 "date)"
 msgstr ""
+"Date à laquelle le contrat est pris en compte (ex. : date de signature)"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_report_tree_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_tree_view
 msgid "Total Monthly Recurring"
-msgstr ""
+msgstr "Total mensuel récurrent"
 
 #. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_exception_decoration
@@ -1797,7 +1735,7 @@ msgstr "TVA :"
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "View Details"
-msgstr ""
+msgstr "Voir les détails"
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__website_message_ids
@@ -1892,6 +1830,14 @@ msgstr ""
 
 #. module: contract
 #. odoo-python
+#: code:addons/contract/models/contract.py:0
+msgid ""
+"You cannot disable the 'Recurrence at line level' option if there are "
+"already invoices generated for this contract."
+msgstr ""
+
+#. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 msgid "You must supply a date of next invoice for contract line '%s'"
 msgstr "Vous devez indiquer la date de prochaine facture pour la ligne '%s'"
@@ -1927,6 +1873,180 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Contrat (Ref {{ object.name or 'n/a' }}) - "
 "Modifications"
+
+#~ msgid ""
+#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
+#~ "\">\n"
+#~ "                <p>Hello <t t-out=\"object.partner_id.name or '' \"/>,</"
+#~ "p>\n"
+#~ "                <p>A new contract has been created: </p>\n"
+#~ "\n"
+#~ "                <p style=\"border-left: 1px solid #8e0000; margin-left: "
+#~ "30px;\">\n"
+#~ "                    &amp;nbsp;&amp;nbsp;<strong>REFERENCES</strong><br/>\n"
+#~ "                    &amp;nbsp;&amp;nbsp;Contract: <strong t-"
+#~ "out=\"object.name\"/><br/>\n"
+#~ "                    <t t-if=\"object.date_start\">\n"
+#~ "                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t t-"
+#~ "out=\"object.date_start or ''\"/><br/>\n"
+#~ "                    </t>\n"
+#~ "\n"
+#~ "                    <t t-if=\"object.user_id\">\n"
+#~ "                    <t t-if=\"object.user_id.email\">\n"
+#~ "                            &amp;nbsp;&amp;nbsp;Your Contact: <a t-att-"
+#~ "href=\"'mailto:%s?subject=Contract %s' % (object.user_id.email, "
+#~ "object.name)\" t-out=\"object.user_id.name\"/>\n"
+#~ "                        </t>\n"
+#~ "                    <t t-else=\"\">\n"
+#~ "                            &amp;nbsp;&amp;nbsp;Your Contact: <t t-"
+#~ "out=\"object.user_id.name\"/>\n"
+#~ "                        </t>\n"
+#~ "                </t>\n"
+#~ "                </p>\n"
+#~ "\n"
+#~ "                <br/>\n"
+#~ "                <p>If you have any questions, do not hesitate to contact "
+#~ "us.</p>\n"
+#~ "                <p>Thank you for choosing <t t-"
+#~ "out=\"object.company_id.name or 'us'\"/>!</p>\n"
+#~ "                <br/>\n"
+#~ "                <br/>\n"
+#~ "                <div style=\"width: 375px; margin: 0px; padding: 0px; "
+#~ "background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-"
+#~ "right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+#~ "                    <h3 style=\"margin: 0px; padding: 2px 14px; font-"
+#~ "size: 12px; color: #DDD;\">\n"
+#~ "                        <strong style=\"text-transform:uppercase;\" t-"
+#~ "out=\"object.company_id.name\"/>\n"
+#~ "                    </h3>\n"
+#~ "                </div>\n"
+#~ "                <div style=\"width: 347px; margin: 0px; padding: 5px "
+#~ "14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+#~ "                    <span style=\"color: #222; margin-bottom: 5px; "
+#~ "display: block; \">\n"
+#~ "                        <address t-"
+#~ "field=\"object.company_id.sudo().partner_id\" t-"
+#~ "options=\"{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: "
+#~ "[&quot;name&quot;, &quot;address&quot;], &quot;no_marker&quot;: True}\"/"
+#~ ">\n"
+#~ "                    </span>\n"
+#~ "                    <t t-if=\"object.company_id.phone\">\n"
+#~ "                        <div style=\"margin-top: 0px; margin-right: 0px; "
+#~ "margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: "
+#~ "0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+#~ "                            Phone: <t t-out=\"object.company_id.phone\"/"
+#~ ">\n"
+#~ "                        </div>\n"
+#~ "                    </t>\n"
+#~ "                    <t t-if=\"object.company_id.website\">\n"
+#~ "                        <div>\n"
+#~ "                            Web: <a t-att-"
+#~ "href=\"object.company_id.website\" t-out=\"object.company_id.website\"/>\n"
+#~ "                        </div>\n"
+#~ "                    </t>\n"
+#~ "                </div>\n"
+#~ "                <br/>\n"
+#~ "                <a t-att-href=\"'%s/my/contracts/%s?access_token=%s' % "
+#~ "(object.get_base_url(), object.id, object.access_token)\" "
+#~ "target=\"_blank\" style=\"background-color:#875A7B;padding: 8px 16px 8px "
+#~ "16px; text-decoration: none; color: #fff; border-radius: 5px; font-"
+#~ "size:13px;\">View contract</a>\n"
+#~ "            </div>\n"
+#~ "        "
+#~ msgstr ""
+#~ "<div style=\"font-family : 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
+#~ "serif ; font-size : 12px ; color : rgb(34, 34, 34) ; background-color : "
+#~ "#FFF ; \">\n"
+#~ "                <p>Hello <t t-out=\"object.partner_id.name or '' \"/>,</"
+#~ "p>\n"
+#~ "                <p>Un nouveau contrat a été créé : </p>\n"
+#~ "\n"
+#~ "                <p style=\"border-left : 1px solid #8e0000 ; margin-"
+#~ "left : 30px ;\">\n"
+#~ "                    &amp ;nbsp ;&amp ;nbsp ;<strong>RÉFÉRENCES</"
+#~ "strong><br/>\n"
+#~ "                    &amp ;nbsp ;&amp ;nbsp ;Contrat : <strong t-"
+#~ "out=\"object.name\"/><br/>\n"
+#~ "                    <t t-if=\"object.date_start\">\n"
+#~ "                        &amp ;nbsp ;&amp ;nbsp ;Date de démarrage du "
+#~ "contrat : <t t-out=\"object.date_start or ''\"/><br/>\n"
+#~ "                    </t>\n"
+#~ "\n"
+#~ "                    <t t-if=\"object.user_id\">\n"
+#~ "                    <t t-if=\"object.user_id.email\">\n"
+#~ "                            &amp ;nbsp ;&amp ;nbsp ;Votre contact : <a t-"
+#~ "att-href=\"'mailto :%s ?subject=Contrat %s' % (object.user_id.email, "
+#~ "object.name)\" t-out=\"object.user_id.name\"/>\n"
+#~ "                        </t>\n"
+#~ "                    <t t-else=\"\">\n"
+#~ "                            &amp ;nbsp ;&amp ;nbsp ;Votre contact : <t t-"
+#~ "out=\"object.user_id.name\"/>\n"
+#~ "                        </t>\n"
+#~ "                </t>\n"
+#~ "                </p>\n"
+#~ "\n"
+#~ "                <br/>\n"
+#~ "                <p>Si vous avez des questions, n'hésitez pas à nous "
+#~ "contacter.</p>\n"
+#~ "                <p t-if=\"object.company_id.name\">Merci d'avoir choisi "
+#~ "<t t-out=\"object.company_id.name\"/> !</p>\n"
+#~ "                <p t-if=\"not object.company_id.name\">Merci de nous "
+#~ "avoir choisi !</p>\n"
+#~ "                <br/>\n"
+#~ "                <br/>\n"
+#~ "                <div style=\"width : 375px ; margin : 0px ; padding : "
+#~ "0px ; background-color : #8E0000 ; border-top-left-radius : 5px 5px ; "
+#~ "border-top-right-radius : 5px 5px ; background-repeat : repeat no-repeat ;"
+#~ "\">\n"
+#~ "                    <h3 style=\"margin : 0px ; padding : 2px 14px ; font-"
+#~ "size : 12px ; color : #DDD ;\">\n"
+#~ "                        <strong style=\"text-transform :uppercase ;\" t-"
+#~ "out=\"object.company_id.name\"/>\n"
+#~ "                    </h3>\n"
+#~ "                </div>\n"
+#~ "                <div style=\"width : 347px ; margin : 0px ; padding : 5px "
+#~ "14px ; line-height : 16px ; background-color : #F2F2F2 ;\">\n"
+#~ "                    <span style=\"color : #222 ; margin-bottom : 5px ; "
+#~ "display : block ; \">\n"
+#~ "                        <address t-"
+#~ "field=\"object.company_id.sudo().partner_id\" t-"
+#~ "options=\"{&quot ;widget&quot ; : &quot ;contact&quot ;, "
+#~ "&quot ;fields&quot ; : [&quot ;name&quot ;, &quot ;address&quot ;], "
+#~ "&quot ;no_marker&quot ; : True}\"/>\n"
+#~ "                    </span>\n"
+#~ "                    <t t-if=\"object.company_id.phone\">\n"
+#~ "                        <div style=\"margin-top : 0px ; margin-right : "
+#~ "0px ; margin-bottom : 0px ; margin-left : 0px ; padding-top : 0px ; "
+#~ "padding-right : 0px ; padding-bottom : 0px ; padding-left : 0px ; \">\n"
+#~ "                            Téléphone : <t t-"
+#~ "out=\"object.company_id.phone\"/>\n"
+#~ "                        </div>\n"
+#~ "                    </t>\n"
+#~ "                    <t t-if=\"object.company_id.website\">\n"
+#~ "                        <div>\n"
+#~ "                            Site Web : <a t-att-"
+#~ "href=\"object.company_id.website\" t-out=\"object.company_id.website\"/>\n"
+#~ "                        </div>\n"
+#~ "                    </t>\n"
+#~ "                </div>\n"
+#~ "                <br/>\n"
+#~ "                <a t-att-href=\"'%s/my/contracts/%s ?access_token=%s' % "
+#~ "(object.get_base_url(), object.id, object.access_token)\" "
+#~ "target=\"_blank\" style=\"background-color :#875A7B ;padding : 8px 16px "
+#~ "8px 16px ; text-decoration : none ; color : #fff ; border-radius : 5px ; "
+#~ "font-size :13px ;\">Voir le contrat</a>\n"
+#~ "            </div>\n"
+#~ "        "
+
+#~ msgid "<strong>Date Start</strong>"
+#~ msgstr "<strong>Date de début</strong>"
+
+#~ msgid "Date End"
+#~ msgstr "Date de fin"
+
+#~ msgid "Date Start"
+#~ msgstr "Date de début"
 
 #~ msgid "Category"
 #~ msgstr "Catégorie"

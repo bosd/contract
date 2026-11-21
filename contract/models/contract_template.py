@@ -7,6 +7,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class ContractTemplate(models.Model):
@@ -20,21 +21,22 @@ class ContractTemplate(models.Model):
 
     # === Basic Info ===
 
+    active = fields.Boolean(default=True)
     name = fields.Char(required=True)
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Partner",
         index=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
+    pricelist_id_domain = fields.Binary(
+        compute="_compute_pricelist_id_domain", readonly=True, store=False
+    )
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist",
-        string="Pricelist",
     )
 
     # === Contract Settings ===
@@ -56,7 +58,6 @@ class ContractTemplate(models.Model):
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Journal",
         domain="[('type', '=', contract_type)]",
         compute="_compute_journal_id",
         store=True,
@@ -73,6 +74,20 @@ class ContractTemplate(models.Model):
         copy=True,
         string="Contract template lines",
     )
+
+    @api.constrains("pricelist_id")
+    def check_currency(self):
+        for rec in self:
+            if rec.pricelist_id and (
+                rec.journal_id.currency_id
+                and rec.journal_id.currency_id != rec.pricelist_id.currency_id
+            ):
+                raise UserError(
+                    self.env._(
+                        "Currency should be same for the Journal and "
+                        "the Pricelist in a Contract"
+                    )
+                )
 
     def _get_valid_journal_type(self):
         self.ensure_one()
@@ -99,3 +114,21 @@ class ContractTemplate(models.Model):
             ]
 
             contract.journal_id = AccountJournal.search(domain, limit=1).id or None
+
+    @api.depends("journal_id")
+    def _compute_pricelist_id_domain(self):
+        for rec in self:
+            rec.pricelist_id_domain = (
+                [("currency_id", "=", rec.journal_id.currency_id.id)]
+                if rec.journal_id.currency_id
+                else []
+            )
+
+    @api.onchange("journal_id")
+    def _onchange_journal_id(self):
+        self.ensure_one()
+        if (
+            self.journal_id.currency_id
+            and self.journal_id.currency_id != self.pricelist_id.currency_id
+        ):
+            self.pricelist_id = None
