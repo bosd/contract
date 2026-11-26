@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import Command, fields
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form, new_test_user
 from odoo.tools import mute_logger
 
@@ -535,6 +535,45 @@ class TestContract(TestContractBase):
             "Should not create a new invoice after the last one",
         )
 
+    def test_contract_last_date_invoiced(self):
+        """contract.contract.last_date_invoiced aggregates max of line values,
+        excluding cancelled lines and pure section/note rows."""
+        self.assertFalse(self.acct_line.last_date_invoiced)
+        self.assertFalse(self.contract.last_date_invoiced)
+        self.acct_line.date_start = "2018-01-01"
+        self.acct_line.recurring_invoicing_type = "post-paid"
+        self.acct_line.date_end = "2018-03-15"
+        self.contract.recurring_create_invoice()
+        self.assertEqual(self.acct_line.last_date_invoiced, to_date("2018-01-31"))
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+        line2 = self.env["contract.line"].create(
+            dict(self.line_vals, recurring_next_date="2018-04-15")
+        )
+        line2.last_date_invoiced = "2018-03-31"
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-03-31"))
+        line2.is_canceled = True
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+        self.env["contract.line"].create(
+            {
+                "contract_id": self.contract.id,
+                "display_type": "line_section",
+                "name": "Header",
+            }
+        )
+        self.assertEqual(self.contract.last_date_invoiced, to_date("2018-01-31"))
+
+    def test_contract_tag_default_color(self):
+        """A tag created without a color gets a random one from the palette."""
+        tag = self.env["contract.tag"].create({"name": "Test tag"})
+        self.assertIn(tag.color, range(1, 12))
+
+    def test_contract_line_display_name(self):
+        """The line display name is prefixed with its start date."""
+        self.assertEqual(
+            self.acct_line.display_name,
+            f"{self.acct_line.date_start} - {self.acct_line.name}",
+        )
+
     def test_onchange_partner_id(self):
         self.contract._onchange_partner_id()
         self.assertEqual(
@@ -569,6 +608,70 @@ class TestContract(TestContractBase):
         with self.assertRaises(ValidationError):
             self.acct_line.write(
                 {"date_start": "2018-01-01", "recurring_next_date": "2017-01-01"}
+            )
+
+    def test_check_contract_start_end_dates(self):
+        """Setting date_end earlier than date_start on the contract record
+        itself must raise a validation error."""
+        contract = self.env["contract.contract"].create(
+            {"name": "Date check", "partner_id": self.partner.id}
+        )
+        with self.assertRaises(ValidationError):
+            contract.write({"date_start": "2025-01-01", "date_end": "2024-12-31"})
+
+    def test_check_contract_start_end_dates_with_lines(self):
+        """With contract-level recurrence, an end date before the start date
+        reports the date order, not a missing next invoice date."""
+        with self.assertRaisesRegex(ValidationError, "end date must be after"):
+            self.env["contract.contract"].create(
+                {
+                    "name": "Date check with lines",
+                    "partner_id": self.partner.id,
+                    "line_recurrence": False,
+                    "date_start": "2025-01-01",
+                    "date_end": "2024-12-31",
+                    "contract_line_ids": [
+                        Command.create(
+                            {
+                                "product_id": self.product_1.id,
+                                "name": "Services",
+                                "quantity": 1,
+                                "price_unit": 100,
+                            }
+                        )
+                    ],
+                }
+            )
+
+    def test_check_recurring_next_date_required(self):
+        """A line still to invoice needs a date of next invoice."""
+        with self.assertRaisesRegex(ValidationError, "date of next invoice"):
+            self.acct_line.recurring_next_date = False
+
+    def test_check_recurring_next_date_reports_date_order(self):
+        """When the next date is empty because the contract ends before it
+        starts (as the form sends it), the line check reports the date
+        order instead of asking for a next date."""
+        with self.assertRaisesRegex(ValidationError, "end date must be after"):
+            self.env["contract.contract"].create(
+                {
+                    "name": "Date check from the form",
+                    "partner_id": self.partner.id,
+                    "line_recurrence": False,
+                    "date_start": "2025-01-01",
+                    "date_end": "2024-12-31",
+                    "contract_line_ids": [
+                        Command.create(
+                            {
+                                "product_id": self.product_1.id,
+                                "name": "Services",
+                                "quantity": 1,
+                                "price_unit": 100,
+                                "recurring_next_date": False,
+                            }
+                        )
+                    ],
+                }
             )
 
     def test_onchange_contract_template_id(self):
@@ -1273,7 +1376,14 @@ class TestContract(TestContractBase):
         """
         Contract = self.env["contract.contract"]
         contracts = Contract.search(Contract._get_contracts_to_invoice_domain())
-        contracts.write({"date_end": "2015-01-01"})
+        # Set the end date in SQL: it is earlier than some start dates, which
+        # the ORM refuses, and the next invoice dates must stay as they are so
+        # the domain keeps selecting these contracts.
+        self.env.cr.execute(
+            "UPDATE contract_contract SET date_end = %s WHERE id IN %s",
+            ("2015-01-01", tuple(contracts.ids)),
+        )
+        contracts.invalidate_recordset(["date_end"])
         self.assertTrue(
             contracts,
             "The fixture must offer the cron something to skip",
@@ -1716,13 +1826,16 @@ class TestContract(TestContractBase):
         )
         self.contract2.journal_id = journal.id
         self.assertEqual(self.contract2.currency_id, currency_cad)
-        # Get currency from contract pricelist
+        # Currency should match for Journal and Pricelist
         pricelist = self.env["product.pricelist"].create(
             {"name": "Test pricelist", "currency_id": currency_eur.id}
         )
+        with self.assertRaises(UserError):
+            self.contract2.pricelist_id = pricelist.id
+        pricelist.currency_id = currency_cad
         self.contract2.pricelist_id = pricelist.id
         self.contract2.contract_line_ids.automatic_price = True
-        self.assertEqual(self.contract2.currency_id, currency_eur)
+        self.assertEqual(self.contract2.currency_id, currency_cad)
         # Get currency from partner pricelist
         self.contract2.pricelist_id = False
         self.contract2.partner_id.property_product_pricelist = pricelist.id
@@ -1734,6 +1847,49 @@ class TestContract(TestContractBase):
         # Assign same currency as computed one
         self.contract2.currency_id = currency_cad.id
         self.assertFalse(self.contract2.manual_currency_id)
+
+    def test_journal_currency_pricelist_domain(self):
+        currency_eur = self.env.ref("base.EUR")
+        currency_cad = self.env.ref("base.CAD")
+        journal_eur = self.env["account.journal"].create(
+            {
+                "name": "Test journal EUR",
+                "code": "TEUR",
+                "type": "sale",
+                "currency_id": currency_eur.id,
+            }
+        )
+        journal_cad = self.env["account.journal"].create(
+            {
+                "name": "Test journal CAD",
+                "code": "TCAD",
+                "type": "sale",
+                "currency_id": currency_cad.id,
+            }
+        )
+        journal_no_currency = self.env["account.journal"].create(
+            {"name": "Test journal no currency", "code": "TNOC", "type": "sale"}
+        )
+        pricelist_eur = self.env["product.pricelist"].create(
+            {"name": "Test pricelist EUR", "currency_id": currency_eur.id}
+        )
+        with Form(self.contract2) as contract_form:
+            contract_form.journal_id = journal_eur
+            self.assertEqual(
+                contract_form.pricelist_id_domain,
+                [("currency_id", "=", currency_eur.id)],
+            )
+            contract_form.pricelist_id = pricelist_eur
+            # Switching to a journal with another currency resets the pricelist
+            contract_form.journal_id = journal_cad
+            self.assertEqual(
+                contract_form.pricelist_id_domain,
+                [("currency_id", "=", currency_cad.id)],
+            )
+            self.assertFalse(contract_form.pricelist_id)
+            # A journal without currency means no restriction at all
+            contract_form.journal_id = journal_no_currency
+            self.assertEqual(contract_form.pricelist_id_domain, [])
 
     def test_contract_action_preview(self):
         action = self.contract.action_preview()
@@ -1762,6 +1918,15 @@ class TestContract(TestContractBase):
         self.assertEqual(len(self.contract._get_related_invoices()), 4)
         self.contract.recurring_create_invoice()
         self.assertEqual(len(self.contract._get_related_invoices()), 4)
+
+    def test_enable_line_recurrence_with_invoices(self):
+        self.contract3.recurring_create_invoice()
+        self.assertTrue(self.contract3.invoice_count)
+        with Form(self.contract3) as contract_form:
+            contract_form.line_recurrence = True
+        self.assertTrue(self.contract3.line_recurrence)
+        with self.assertRaises(ValidationError):
+            self.contract3.line_recurrence = False
 
     @freeze_time("2023-05-01")
     def test_check_month_name_marker(self):
@@ -1822,4 +1987,18 @@ class TestContract(TestContractBase):
         new_contract_line = self.env["contract.line"].create(self.line_vals)
         self.assertEqual(
             new_contract_line.analytic_distribution, {str(analytic_account.id): 100}
+        )
+
+    def test_insert_markers_without_dates(self):
+        """A missing date leaves its markers empty instead of failing."""
+        self.acct_line.name = "#START# - #END# (#INVOICEMONTHNAME#)"
+        self.assertEqual(self.acct_line._insert_markers(False, False), " -  ()")
+        start = to_date("2018-01-01")
+        lang = self.env["res.lang"].search(
+            [("code", "=", self.acct_line.contract_id.partner_id.lang)]
+        )
+        date_format = lang.date_format or "%m/%d/%Y"
+        self.assertEqual(
+            self.acct_line._insert_markers(start, False),
+            f"{start.strftime(date_format)} -  (January)",
         )

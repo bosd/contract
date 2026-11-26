@@ -33,7 +33,7 @@ msgid ""
 "                    &amp;nbsp;&amp;nbsp;Contract: <strong t-"
 "out=\"object.name\"/><br/>\n"
 "                    <t t-if=\"object.date_start\">\n"
-"                        &amp;nbsp;&amp;nbsp;Contract Date Start: <t t-"
+"                        &amp;nbsp;&amp;nbsp;Contract Start Date: <t t-"
 "out=\"object.date_start or ''\"/><br/>\n"
 "                    </t>\n"
 "\n"
@@ -203,12 +203,6 @@ msgid "<strong>Customer:</strong>"
 msgstr ""
 
 #. module: contract
-#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
-#, fuzzy
-msgid "<strong>Date Start</strong>"
-msgstr "<strong>Data de inicio: </strong>"
-
-#. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_contract_page
 msgid "<strong>Date end</strong>"
 msgstr ""
@@ -283,6 +277,11 @@ msgstr ""
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.report_contract_document
+msgid "<strong>Start Date</strong>"
+msgstr ""
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.report_contract_document
 msgid "<strong>Total</strong>"
 msgstr "<strong>Total</strong>"
 
@@ -343,6 +342,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.contract_contract_form_view
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_form_view
 msgid "Add a section"
+msgstr ""
+
+#. module: contract
+#. odoo-python
+#: code:addons/contract/controllers/main.py:0
+msgid "All"
 msgstr ""
 
 #. module: contract
@@ -632,7 +637,6 @@ msgstr "Modelos de contrato"
 #: model:ir.ui.menu,name:contract.menu_config_contract
 #: model:ir.ui.menu,name:contract.menu_contract_reporting
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
-#: model_terms:ir.ui.view,arch_db:contract.portal_my_home_contract
 #: model_terms:ir.ui.view,arch_db:contract.portal_my_home_menu_contract
 msgid "Contracts"
 msgstr "Contratos"
@@ -692,6 +696,12 @@ msgid "Currency"
 msgstr "Recorrencia"
 
 #. module: contract
+#. odoo-python
+#: code:addons/contract/models/contract_template.py:0
+msgid "Currency should be same for the Journal and the Pricelist in a Contract"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields.selection,name:contract.selection__contract_line__note_invoicing_mode__custom
 #: model:ir.model.fields.selection,name:contract.selection__contract_template_line__note_invoicing_mode__custom
 #, fuzzy
@@ -737,25 +747,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.template_contract_modification
 msgid "Date"
 msgstr ""
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_line__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_template__date_end
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_end
-#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
-msgid "Date End"
-msgstr "Data fin"
-
-#. module: contract
-#: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_line__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_template__date_start
-#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
-msgid "Date Start"
-msgstr "Data de inicio"
 
 #. module: contract
 #: model_terms:ir.ui.view,arch_db:contract.contract_line_search_view
@@ -876,6 +867,16 @@ msgid "Email Contract Template"
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_template__date_end
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_end
+#: model_terms:ir.ui.view,arch_db:contract.contract_contract_search_view
+msgid "End Date"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__invoice_generation_error
 msgid "Error message from the most recent failed scheduled invoicing run."
 msgstr ""
@@ -902,6 +903,16 @@ msgstr "Rematado"
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__fiscal_position_id
 msgid "Fiscal Position"
+msgstr ""
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_home_contract
+msgid "Follow the services we invoice you for"
+msgstr ""
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_home_contract
+msgid "Follow the services you invoice us for"
 msgstr ""
 
 #. module: contract
@@ -1378,6 +1389,13 @@ msgid "Other Information"
 msgstr ""
 
 #. module: contract
+#. odoo-python
+#: code:addons/contract/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_home_contract
+msgid "Our Contracts"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_contract__partner_id
 #: model:ir.model.fields,field_description:contract.field_contract_line__partner_id
 #: model:ir.model.fields,field_description:contract.field_contract_template__partner_id
@@ -1437,6 +1455,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:contract.contract_template_search_view
 msgid "Pricelist"
 msgstr "Lista de prezos"
+
+#. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__pricelist_id_domain
+#: model:ir.model.fields,field_description:contract.field_contract_template__pricelist_id_domain
+msgid "Pricelist Id Domain"
+msgstr ""
 
 #. module: contract
 #: model:ir.model.fields,field_description:contract.field_contract_line__product_id
@@ -1614,6 +1638,15 @@ msgid "Specify interval for automatic invoice generation."
 msgstr ""
 
 #. module: contract
+#: model:ir.model.fields,field_description:contract.field_contract_contract__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_line__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_recurring_mixin__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template__date_start
+#: model:ir.model.fields,field_description:contract.field_contract_template_line__date_start
+msgid "Start Date"
+msgstr ""
+
+#. module: contract
 #: model:ir.model.fields,help:contract.field_contract_contract__activity_state
 msgid ""
 "Status based on activities\n"
@@ -1662,6 +1695,11 @@ msgstr ""
 #: model:ir.model.fields,help:contract.field_contract_line__display_type
 #: model:ir.model.fields,help:contract.field_contract_template_line__display_type
 msgid "Technical field for UX purposes."
+msgstr ""
+
+#. module: contract
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_contracts
+msgid "There are currently no contracts for your account."
 msgstr ""
 
 #. module: contract
@@ -1801,6 +1839,14 @@ msgstr ""
 
 #. module: contract
 #. odoo-python
+#: code:addons/contract/models/contract.py:0
+msgid ""
+"You cannot disable the 'Recurrence at line level' option if there are "
+"already invoices generated for this contract."
+msgstr ""
+
+#. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract_line.py:0
 #, fuzzy
 msgid "You must supply a date of next invoice for contract line '%s'"
@@ -1808,8 +1854,21 @@ msgstr "Debe fornecer unha data de próxima factura para o contrato '%s'"
 
 #. module: contract
 #. odoo-python
+#: code:addons/contract/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:contract.portal_my_home_contract
+msgid "Your Contracts"
+msgstr ""
+
+#. module: contract
+#. odoo-python
 #: code:addons/contract/models/contract.py:0
 msgid "by contract"
+msgstr ""
+
+#. module: contract
+#. odoo-python
+#: code:addons/contract/controllers/main.py:0
+msgid "contract_type"
 msgstr ""
 
 #. module: contract
@@ -1836,6 +1895,16 @@ msgid ""
 "{{ object.company_id.name }} Contract (Ref {{ object.name or 'n/a' }}) - "
 "Modifications"
 msgstr ""
+
+#, fuzzy
+#~ msgid "<strong>Date Start</strong>"
+#~ msgstr "<strong>Data de inicio: </strong>"
+
+#~ msgid "Date End"
+#~ msgstr "Data fin"
+
+#~ msgid "Date Start"
+#~ msgstr "Data de inicio"
 
 #~ msgid "Group By..."
 #~ msgstr "Agrupar por..."
